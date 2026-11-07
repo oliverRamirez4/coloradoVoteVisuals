@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, createContext } from 'react';
+import React, { Suspense, useState, useEffect, createContext } from 'react';
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -13,7 +13,7 @@ import { ExportModal } from '@/components/export/ExportModal';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { useSearchParams } from 'next/navigation';
 
-export default function visualLayoutRootLayout({
+function VisualLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -126,5 +126,17 @@ export default function visualLayoutRootLayout({
         </>
       )}
     </div>
+  );
+}
+
+export default function visualLayoutRootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <Suspense fallback={null}>
+      <VisualLayout>{children}</VisualLayout>
+    </Suspense>
   );
 }

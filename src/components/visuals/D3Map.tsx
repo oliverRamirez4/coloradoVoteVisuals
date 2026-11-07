@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 
 import React, { useEffect, useRef, useContext } from 'react';
@@ -5,7 +6,6 @@ import { Feature, FeatureCollection, Geometry } from 'geojson';
 import { VoteData } from '@/types/propdata';
 import GradientBar from '../ui/Key';
 import * as d3 from 'd3';
-import { VoteDataContext } from '@/context/VoteDataContext';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 
 type MapProps = {

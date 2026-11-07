@@ -41,6 +41,21 @@ npm run dev
 ```
 * then navigate to your local host that the application is currently running on. i.e http://localhost:3000/
 
+## Deploying on Vercel
+
+This is a Next.js app. Vercel detects the framework from `package.json` and runs `npm run build`, which generates the Prisma client and then builds the app.
+
+1. Import `oliverRamirez4/coloradoVoteVisuals` in the Vercel dashboard, or run `npx vercel` from this directory.
+2. Add this environment variable for Production, Preview, and Development. Use the Neon connection string for the Colorado election database:
+
+```
+DATABASE_URL
+```
+
+Prisma reads that variable while generating the client, and the API routes use it at runtime through the Neon serverless driver. The build fails if `DATABASE_URL` is missing.
+
+3. Deploy. The site does not need a Mapbox token. County shapes are loaded in the browser from a public GeoJSON file, and proposition data is loaded from `/api/propositions`.
+
 ## Help
 
 Contact the developers for any help or guidance on the project.

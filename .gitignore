@@ -1,5 +1,5 @@
 node_modules/
 .next/
-git p
 .env
-.DS_store
+.DS_Store
+tsconfig.tsbuildinfo
