@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import Link from 'next/link';
+import { withBase } from '@/lib/paths';
 
 export const HistImage = () => {
     return (
@@ -10,7 +11,7 @@ export const HistImage = () => {
           </Link>
           <div id='histogram-image' className="bg-white p-4 shadow-md object-contain rounded-lg">
           <img id='histogram' 
-              src="/histogram_2.png"
+              src={withBase("/histogram_2.png")}
               className="hidden md:block"
               alt="Colorado County Bar Chart"
             />   

@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {Proposition} from '@/types/propdata';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
+import { withBase } from '@/lib/paths'; 
 
 
 interface Props {
@@ -39,7 +40,7 @@ export function PropositionFilters(props: Props) {
     //Fetch voting years for the drop down on mounting of the component
     const fetchYears = async () => {
         try {
-          const response = await fetch(`/api/propositions/years`)
+          const response = await fetch(withBase(`/api/propositions/years`))
           if (!response.ok) {
             throw new Error('Failed to fetch Years')
             return
@@ -56,7 +57,7 @@ export function PropositionFilters(props: Props) {
       }
       const fetchPropositionByID = async(prop_id:string) =>{
         try {
-          const response = await fetch(`/api/propositions/${prop_id}`)
+          const response = await fetch(withBase(`/api/propositions/${prop_id}`))
           if (!response.ok) {
             throw new Error('Failed to fetch proposition')
             return
@@ -92,7 +93,7 @@ export function PropositionFilters(props: Props) {
     const fetchPropositions = async () => {
       try {
         //console.log("calling fetchPropositions with year value: ", selectedYear)
-        const response = await fetch(`/api/propositions/years/${selectedYear}`)
+        const response = await fetch(withBase(`/api/propositions/years/${selectedYear}`))
         console.log("the response is", response)
         if (!response.ok){
           throw new Error('failed to fetch propositions')

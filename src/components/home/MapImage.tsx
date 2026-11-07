@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import Link from 'next/link';
+import { withBase } from '@/lib/paths';
 import Image from 'next/image';
 
 export const MapImage = () => {
@@ -12,7 +13,7 @@ export const MapImage = () => {
 
          <div id='map-image' className="bg-white p-4 shadow-md rounded-lg">
           <img id='map' 
-              src="/map_image2.png"
+              src={withBase("/map_image2.png")}
               className="hidden md:block"
               alt="Choropleth County Map"
             />    

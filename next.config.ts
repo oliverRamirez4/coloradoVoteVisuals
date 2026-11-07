@@ -1,8 +1,9 @@
 import { NextConfig } from 'next';
+import { assetPrefix, basePath } from './src/lib/paths';
 
 const nextConfig: NextConfig = {
-  basePath: "/apps/colorado-vote",
-  assetPrefix: "/apps/colorado-vote-static",
+  basePath,
+  assetPrefix,
   async rewrites() {
     return [
       {

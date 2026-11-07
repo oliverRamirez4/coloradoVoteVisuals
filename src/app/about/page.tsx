@@ -1,6 +1,7 @@
 //"use client";
 
 import { Header } from '@/components/layout/Header';
+import { withBase } from '@/lib/paths';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata = {
@@ -125,7 +126,7 @@ export default function AboutPage() {
                    {/* Developer 1 */}
                    <div id='image-box' className="flex flex-col items-center bg-gray-100 p-6 rounded-lg shadow-md">
                        <img
-                           src="/leigh_HS.png"
+                           src={withBase("/leigh_HS.png")}
                            alt="Developer 1"
                            className="w-32 h-32 rounded-full mb-4 object-cover"
                        />
@@ -139,7 +140,7 @@ export default function AboutPage() {
                    {/* Developer 2 */}
                    <div id='image-box' className="flex flex-col items-center p-6 rounded-lg shadow-md">
                        <img
-                           src="/mira_HS.png"
+                           src={withBase("/mira_HS.png")}
                            alt="Developer 2"
                            className="w-32 h-32 rounded-full mb-4 object-cover"
                        />
@@ -153,7 +154,7 @@ export default function AboutPage() {
                    {/* Developer 3 */}
                    <div id='image-box' className="flex flex-col items-center p-6 rounded-lg shadow-md">
                        <img
-                           src="/Ram_HS.png"
+                           src={withBase("/Ram_HS.png")}
                            alt="Developer 3"
                            className="w-32 h-32 rounded-full mb-4 object-cover"
                        />
@@ -167,7 +168,7 @@ export default function AboutPage() {
                    {/* Developer 4 */}
                    <div id='image-box' className="flex flex-col items-center p-6 rounded-lg shadow-md">
                        <img
-                           src="/kendall_HS.png"
+                           src={withBase("/kendall_HS.png")}
                            alt="Developer 4"
                            className="w-32 h-32 rounded-full mb-4 object-cover"
                        />
@@ -181,7 +182,7 @@ export default function AboutPage() {
                    {/* Developer 5 */}
                    <div id='image-box' className="flex flex-col items-center p-6 rounded-lg shadow-md">
                        <img
-                           src="/dan_HS.png"
+                           src={withBase("/dan_HS.png")}
                            alt="Developer 5"
                            className="w-32 h-32 rounded-full mb-4 object-cover"
                        />

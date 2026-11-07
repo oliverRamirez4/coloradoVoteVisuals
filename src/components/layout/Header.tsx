@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import Link from 'next/link';
+import { withBase } from '@/lib/paths';
 import Image from 'next/image';
 import { Dropdown } from '../ui/Dropdown';
 import '@/app/globals.css';
@@ -18,7 +19,7 @@ export const Header = () => {
                 <Link href="/" className="text-xl hover:text-violet-950 hover:underline">Home</Link>
             </nav>
             <div className='dropdown'>
-              <button className='button text-xl hover:text-violet-950'>Visualizations <img src='/dropdown.png' height={'10px'} width={'10px'} className="inline-block"/></button>
+              <button className='button text-xl hover:text-violet-950'>Visualizations <img src={withBase('/dropdown.png')} height={'10px'} width={'10px'} className="inline-block"/></button>
                 <div className='content bg-violet-100'>
                 <Link href="/visuals/map" className="link text-xl hover:text-violet-950 hover:underline">Map</Link>
                 <Link href="/visuals/histogram" className="link text-xl hover:text-violet-950 hover:underline">Histogram</Link>

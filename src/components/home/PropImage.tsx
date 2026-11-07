@@ -1,6 +1,7 @@
 //'use client';
 import React from 'react';
 import Link from 'next/link';
+import { withBase } from '@/lib/paths';
 
 export const PropImage = () => {
     return (
@@ -13,7 +14,7 @@ export const PropImage = () => {
         </div>
           <div id='comp-image' className="bg-white p-4 shadow-md object-contain rounded-lg">
           <img id='comparison' 
-              src="/comparison.png"
+              src={withBase("/comparison.png")}
               className="hidden md:block"
               alt="Zoomed photo of proposition comparison graph"
             /> 
