@@ -13,14 +13,9 @@ import { NextResponse } from 'next/server';
  * @date 2024-11-28
  */
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ proposition_id: string }> }
-) {
-
+export async function GET(req: Request) {
   try {
-      const { proposition_id } = await params;
-
+    const proposition_id = new URL(req.url).searchParams.get('proposition_id');
 
     // Validate proposition_id
     if (!proposition_id || isNaN(Number(proposition_id))) {
