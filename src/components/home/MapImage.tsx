@@ -7,7 +7,7 @@ import Image from 'next/image';
 export const MapImage = () => {
     return (
         <div id='image-box' className="border-b shadow-md py-4 px-8 content-between rounded-lg">
-            <Link href="visuals/map" className="text-xl font-bold font-serif hover:underline">
+            <Link href="/visuals/map" className="text-xl font-bold font-serif hover:underline">
             County Level Pass/Fail Density Map
           </Link>
 
