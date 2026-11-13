@@ -1,39 +1,38 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { withBase } from '@/lib/paths';
-import Image from 'next/image';
-import { Dropdown } from '../ui/Dropdown';
-import '@/app/globals.css';
 
 export const Header = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="bg-violet-100 border-b shadow-md flex py-4">
-      <div style={{width: '75%' }} className="items-left object-contain px-14">
-          <Link href="/" className="text-3xl font-bold font-serif">
-            Colorado Vote Visuals
-          </Link>
-        </div>
-        <div style={{width: '50%' }} className="container mx-auto pr-14 justify-between flex" id="navbar-default">
-            <nav className="space-x-4">
-                <Link href="/" className="text-xl hover:text-violet-950 hover:underline">Home</Link>
-            </nav>
-            <div className='dropdown'>
-              <button className='button text-xl hover:text-violet-950'>Visualizations <img src={withBase('/dropdown.png')} height={'10px'} width={'10px'} className="inline-block"/></button>
-                <div className='content bg-violet-100'>
-                <Link href="/visuals/map" className="link text-xl hover:text-violet-950 hover:underline">Map</Link>
-                <Link href="/visuals/histogram" className="link text-xl hover:text-violet-950 hover:underline">Histogram</Link>
-                <Link href="/comparison" className="link text-xl hover:text-violet-950 hover:underline">Comparison</Link>
-              </div>
+    <header className="border-b border-violet-200 bg-violet-50">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <Link href="/" className="font-serif text-xl font-bold text-gray-900 sm:text-2xl">
+          Colorado Vote Visuals
+        </Link>
+        <button
+          type="button"
+          className="rounded-md border border-violet-300 px-3 py-1 text-sm text-gray-900 md:hidden"
+          aria-expanded={open}
+          onClick={() => setOpen((current) => !current)}
+        >
+          Menu
+        </button>
+        <nav className={`${open ? 'flex' : 'hidden'} w-full flex-col gap-3 text-gray-900 md:flex md:w-auto md:flex-row md:items-center md:gap-6`}>
+          <Link href="/" className="hover:underline" onClick={() => setOpen(false)}>Home</Link>
+          <details className="relative">
+            <summary className="cursor-pointer">Visualizations</summary>
+            <div className="mt-2 flex flex-col gap-2 rounded-md border border-violet-200 bg-white p-3 md:absolute md:z-20 md:mt-2 md:min-w-44 md:shadow">
+              <Link href="/visuals/map" onClick={() => setOpen(false)}>Map</Link>
+              <Link href="/visuals/histogram" onClick={() => setOpen(false)}>Histogram</Link>
+              <Link href="/comparison" onClick={() => setOpen(false)}>Comparison</Link>
             </div>
-            <nav className="space-x-4">
-                <Link href="/about" className="text-xl hover:text-violet-950 hover:underline">About</Link>
-            </nav>
-            <nav className="space-x-4">
-              <Link href="/contact" className="text-xl hover:text-violet-950 hover:underline">Contact</Link>
-              
-            </nav>
-          </div>
+          </details>
+          <Link href="/about" className="hover:underline" onClick={() => setOpen(false)}>About</Link>
+          <Link href="/contact" className="hover:underline" onClick={() => setOpen(false)}>Contact</Link>
+        </nav>
+      </div>
     </header>
   );
 };

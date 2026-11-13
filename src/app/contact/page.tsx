@@ -26,9 +26,9 @@ export default function Contact() {
         <div className="min-h-screen bg-white text-gray-900">
             <Header/>
 
-        <main className='h-screen flex items-center justify-center'>
-            <div className="bg-violet-100 flex rounded-lg items-left" > 
-                <div className='p-20 items-center justify-center'>
+        <main className='mx-auto flex w-full max-w-xl items-start justify-center px-4 py-8 sm:px-6'>
+            <div className="w-full rounded-lg bg-violet-100" > 
+                <div className='p-6 sm:p-10'>
                     <h1 className='text-2xl pb-2 text-gray-900'>
                         Questions? Comments? Concerns?
                     </h1>
@@ -41,7 +41,7 @@ export default function Contact() {
                 </div>
             </div>
         </main>
-        <div className='px-14'>
+        <div className='px-4 sm:px-6'>
             <Footer/>
         </div>
             

@@ -1,7 +1,7 @@
 // @ts-nocheck
 'use client';
 
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3-v4';
 import {VoteData} from '@/types/propdata';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
@@ -27,7 +27,20 @@ export function ComparisonVisual({prop1VoteData, prop2VoteData}: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<d3.Selection<HTMLDivElement, unknown, HTMLElement, any>>();
+  const [chartWidth, setChartWidth] = useState(800);
 
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    const measure = () => {
+      const next = Math.floor(node.clientWidth);
+      setChartWidth((current) => (current === next || next < 1 ? current : next));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     var voteData = null;
@@ -61,9 +74,9 @@ export function ComparisonVisual({prop1VoteData, prop2VoteData}: MapProps) {
       tooltipRef.current = tooltip;
 
     // Set the dimensions and margins of the graph
-    const margin = { top: 10, right: 0, bottom: 50, left: 70 },
-      width = 800 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+    const margin = { top: 10, right: 16, bottom: 50, left: 56 },
+      width = Math.max(220, (chartWidth || 800) - margin.left - margin.right),
+      height = Math.max(240, Math.min(420, Math.round((chartWidth || 800) * 0.5)));
 
 
 
@@ -454,7 +467,7 @@ const yAxisLabel = svg
           tooltipRef.current.remove();
         }
       };
-  }, [prop1VoteData,prop2VoteData]); // Re-render when voteData changes
+  }, [prop1VoteData, prop2VoteData, chartWidth, propositionName1, propositionName2]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">

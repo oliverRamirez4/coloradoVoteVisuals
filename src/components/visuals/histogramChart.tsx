@@ -21,8 +21,22 @@ export function PropositionHistogram({ voteData }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<d3.Selection<HTMLDivElement, unknown, HTMLElement, any>>();
+  const [chartWidth, setChartWidth] = React.useState(800);
   const SelectedProp = useContext(SelectedPropContext)
   const propositionName  = SelectedProp ?SelectedProp.name : '';
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    const measure = () => {
+      const next = Math.floor(node.clientWidth);
+      setChartWidth((current) => (current === next || next < 1 ? current : next));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     console.log("UPDATED DATA")
@@ -49,9 +63,9 @@ export function PropositionHistogram({ voteData }: MapProps) {
 
     // set the dimensions and margins of the graph
     const titleHeight = 40;
-    const margin = { top: titleHeight, right: 0, bottom: 50, left: 70 },
-      width = 800 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+    const margin = { top: titleHeight, right: 16, bottom: 50, left: 56 },
+      width = Math.max(220, (chartWidth || 800) - margin.left - margin.right),
+      height = Math.max(240, Math.min(420, Math.round((chartWidth || 800) * 0.5)));
 
     // set up SVG container
     const svg = d3
@@ -358,7 +372,7 @@ scatter
           tooltipRef.current.remove();
         }
       };
-  }, [voteData]); // Re-render when voteData changes
+  }, [voteData, chartWidth]); // Re-render when voteData or the container width changes
 
   return (
     <div ref={containerRef} className="relative w-full h-full">

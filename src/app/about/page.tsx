@@ -27,10 +27,8 @@ export default function AboutPage() {
    return (
        <div className="min-h-screen bg-white text-gray-900">
            <Header />
-          
-           {/* Main content section */}
-           //future work - make headshots a button to click to launch to LinkedIn and Personal Websites
-           <section className="pt-4 px-14">
+
+          <section className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
                <h1 className="text-3xl font-serif">About</h1>
                <p className="text-sm">The purpose, the data, and the team.</p>
                <hr className="h-px my-4 bg-violet-300 border-0"></hr>
@@ -109,7 +107,7 @@ export default function AboutPage() {
                 <hr className="h-px mt-4 bg-violet-300 border-0" />
             </section>
            {/* Meet the Developers Section */}
-           <section className="py-4 px-14">
+           <section className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
                <h2 className="text-2xl font-bold mb-4">Meet the Developers</h2>
                <p className="text-m my-4">
                This project was built as a thesis project for five computer science students at Colorado College. To reach the developers shoot an email to coloradovotevisuals@gmail.com or submit site feedback via our contact form
@@ -195,7 +193,7 @@ export default function AboutPage() {
            </section>
 
 
-           <div className='px-14'><Footer /></div> 
+           <div className='px-4 sm:px-6'><Footer /></div> 
        </div>
    );
 }

@@ -90,8 +90,8 @@ export function ColoradoMap({ propositionId, year, voteData = [] }: MapProps) {
     }
 
     function render(us: FeatureCollection<Geometry, CountyProperties>) {
-      const width = containerRef.current?.clientWidth || 1000;
-      const height = containerRef.current?.clientHeight || 900;
+      const width = containerRef.current?.clientWidth || 640;
+      const height = Math.max(420, containerRef.current?.clientHeight || Math.round(width * 0.8));
     
       const titleHeight = 50; // Space for title
       const gradientHeight = 90; // Space for gradient bar
@@ -234,7 +234,7 @@ export function ColoradoMap({ propositionId, year, voteData = [] }: MapProps) {
       gradient.append('stop').attr('offset', '100%').attr('stop-color', '#810f7c');
     
       // Draw the gradient bar
-      const barWidth = 500;
+      const barWidth = Math.max(160, Math.min(500, width - 32));
       const barHeight = 20;
       const barX = (width - barWidth) / 2;
       const barY = 0;
@@ -274,29 +274,26 @@ export function ColoradoMap({ propositionId, year, voteData = [] }: MapProps) {
     }
     
 
-    // Fetch GeoJSON data and call render
+    let cancelled = false;
+    let observer: ResizeObserver | null = null;
+
     fetch('https://raw.githubusercontent.com/earthlab/earthpy/refs/heads/main/earthpy/example-data/colorado-counties.geojson')
       .then(response => response.json())
       .then((countyData: FeatureCollection<Geometry, CountyProperties>) => {
-        console.log(countyData); // For debugging
+        if (cancelled) return;
         render(countyData);
-
-        // Handle window resize
-        const handleResize = () => {
-          if (containerRef.current) {
-            render(countyData);
-          }
-        };
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup event listener on unmount
-        return () => window.removeEventListener('resize', handleResize);
+        if (containerRef.current) {
+          observer = new ResizeObserver(() => render(countyData));
+          observer.observe(containerRef.current);
+        }
       })
       .catch(error => {
         console.error('Error loading county data:', error);
       });
 
     return () => {
+      cancelled = true;
+      observer?.disconnect();
       if (tooltipRef.current) {
         tooltipRef.current.remove();
       }
@@ -304,7 +301,7 @@ export function ColoradoMap({ propositionId, year, voteData = [] }: MapProps) {
   }, [finalVoteData, propositionName]);
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-[600px]">
+    <div ref={containerRef} className="relative h-[70vw] min-h-[24rem] w-full max-h-[40rem]">
       <svg ref={svgRef} id="map-svg" className="w-full h-full" />
     </div>
   );

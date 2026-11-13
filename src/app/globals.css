@@ -102,19 +102,11 @@ div#image-box {
   background-color: rgb(237 233 254);
 }
 
-div#map-image {
-  height: 90%;
-  width: 370px;
-}
-
-div#histogram-image {
-  height: 90%;
-  width: 350px;
-}
-
+div#map-image,
+div#histogram-image,
 div#comp-image {
-  height: 90%;
-  width: 370px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .title {

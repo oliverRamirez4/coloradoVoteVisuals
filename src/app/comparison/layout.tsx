@@ -55,15 +55,14 @@ const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <Header />
-      <div className="pt-4 px-14">
-          <h1 className="text-3xl font-serif">Proposition Comparison By County</h1>
-          <p className="text-sm">Compare the approval percentage of two propositions</p>
-          <hr className="h-px my-4 bg-violet-300 border-0"></hr>
+      <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+          <h1 className="font-serif text-2xl sm:text-3xl">Proposition Comparison By County</h1>
+          <p className="mt-1 text-sm text-stone-600">Compare the approval percentage of two propositions</p>
       </div>
-      <main className="container mx-auto px-4 py-4">
+      <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-3">
-            <Card className="h-[800px] flex flex-col grow justify-center">
+          <div className="min-w-0 md:col-span-3">
+            <Card className="flex min-h-[28rem] flex-col justify-center overflow-x-auto">
               <div className="justify-center flex mx-14 my-4 text-lg font-serif">
               </div>
               <SelectedPropContext.Provider value={selectedProp1}>
