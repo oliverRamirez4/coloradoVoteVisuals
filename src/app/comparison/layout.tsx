@@ -11,6 +11,7 @@ import VisualizationSelect from '@/components/vizSelect/VisualizationSelect';
 import { ExportModal } from '@/components/export/ExportModal';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { ComparePropContext } from '@/context/ComparePropContext';
+import { visualizationById } from '@/lib/visualizations';
 
 
 
@@ -56,8 +57,8 @@ const [isModalOpen, setIsModalOpen] = useState(false);
     <div className="min-h-screen bg-white text-gray-900">
       <Header />
       <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
-          <h1 className="font-serif text-2xl sm:text-3xl">Proposition Comparison By County</h1>
-          <p className="mt-1 text-sm text-stone-600">Compare the approval percentage of two propositions</p>
+          <h1 className="font-serif text-2xl sm:text-3xl">{visualizationById('comparison').name}</h1>
+          <p className="mt-1 text-sm text-stone-600">{visualizationById('comparison').detail}</p>
       </div>
       <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

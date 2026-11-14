@@ -12,6 +12,7 @@ import VisualizationSelect from '@/components/vizSelect/VisualizationSelect';
 import { ExportModal } from '@/components/export/ExportModal';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { useSearchParams } from 'next/navigation';
+import { visualizationByPath } from '@/lib/visualizations';
 
 function VisualLayout({
   children,
@@ -46,6 +47,8 @@ function VisualLayout({
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const pathname = usePathname();
+  const view = visualizationByPath(pathname);
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get('embed') === 'true';
   const propositionId = searchParams.get('proposition_id');
@@ -75,8 +78,8 @@ function VisualLayout({
         <>
           <Header />
           <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
-            <h1 className="font-serif text-2xl sm:text-3xl">Visualization Generator</h1>
-            <p className="mt-1 text-sm text-stone-600">Compare the percentages of people voting for propositions in each county.</p>
+            <h1 className="font-serif text-2xl sm:text-3xl">{view?.name ?? 'Visualizations'}</h1>
+            <p className="mt-1 text-sm text-stone-600">{view?.detail}</p>
           </div>
           <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

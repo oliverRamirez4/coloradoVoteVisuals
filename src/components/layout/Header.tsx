@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { visualizations } from '@/lib/visualizations';
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -23,11 +24,10 @@ export const Header = () => {
           <Link href="/" className="hover:underline" onClick={() => setOpen(false)}>Home</Link>
           <details className="relative">
             <summary className="cursor-pointer">Visualizations</summary>
-            <div className="mt-2 flex flex-col gap-2 rounded-md border border-violet-200 bg-white p-3 md:absolute md:z-20 md:mt-2 md:min-w-44 md:shadow">
-              <Link href="/visuals/map" onClick={() => setOpen(false)}>Map</Link>
-              <Link href="/visuals/population" onClick={() => setOpen(false)}>Population</Link>
-              <Link href="/visuals/histogram" onClick={() => setOpen(false)}>Histogram</Link>
-              <Link href="/comparison" onClick={() => setOpen(false)}>Comparison</Link>
+            <div className="mt-2 flex flex-col gap-2 rounded-md border border-violet-200 bg-white p-3 md:absolute md:z-20 md:mt-2 md:min-w-56 md:shadow">
+              {visualizations.map((view) => (
+                <Link key={view.id} href={view.href} onClick={() => setOpen(false)}>{view.name}</Link>
+              ))}
             </div>
           </details>
           <Link href="/about" className="hover:underline" onClick={() => setOpen(false)}>About</Link>
