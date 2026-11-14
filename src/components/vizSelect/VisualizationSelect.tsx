@@ -9,15 +9,16 @@ type Props = {
 }
 
 export default function VisualizationSelect(props: Props) {
-  const [alignment, setAlignment] = React.useState<"Histogram" | "Map" | "Comparison" | null>("Histogram");
+  const [alignment, setAlignment] = React.useState<"Histogram" | "Map" | "Population" | "Comparison" | null>("Histogram");
   const router = useRouter();
-  
-  // Function to handle navigation
-  const handleNavigation = (newAlignment: "Histogram" | "Map" | "Comparison" | null) => {
+
+  const handleNavigation = (newAlignment: "Histogram" | "Map" | "Population" | "Comparison" | null) => {
     if (newAlignment === "Histogram") {
       router.push(props.propId === 0 ? `/visuals/histogram` : `/visuals/histogram/?proposition_id=${props.propId}`);
     } else if (newAlignment === "Map") {
       router.push(props.propId === 0 ? `/visuals/map` : `/visuals/map/?proposition_id=${props.propId}`);
+    } else if (newAlignment === "Population") {
+      router.push(props.propId === 0 ? `/visuals/population` : `/visuals/population/?proposition_id=${props.propId}`);
     } else if (newAlignment === "Comparison") {
       router.push(props.propId === 0 ? `/comparison` : `/comparison/?proposition1_id=${props.propId}`);
     }
@@ -27,6 +28,8 @@ export default function VisualizationSelect(props: Props) {
   useEffect(() => {
     if (window.location.pathname.includes('/visuals/histogram')) {
       setAlignment("Histogram");
+    } else if (window.location.pathname.includes('/visuals/population')) {
+      setAlignment("Population");
     } else if (window.location.pathname.includes('/visuals/map')) {
       setAlignment("Map");
     } else if (window.location.pathname.includes('/comparison')) {
@@ -36,7 +39,7 @@ export default function VisualizationSelect(props: Props) {
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: "Histogram" | "Map" | "Comparison" | null,
+    newAlignment: "Histogram" | "Map" | "Population" | "Comparison" | null,
   ) => {
     if (newAlignment !== null) {
       setAlignment(newAlignment);
@@ -60,6 +63,10 @@ export default function VisualizationSelect(props: Props) {
 
       <ToggleButton value="Map" className = 'flex-1 text-center'>
         Map
+      </ToggleButton>
+
+      <ToggleButton value="Population" className = 'flex-1 text-center'>
+        Population
       </ToggleButton>
 
       <ToggleButton value="Comparison" className = 'flex-1 text-center'>

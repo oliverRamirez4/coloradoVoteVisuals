@@ -25,6 +25,7 @@ export const Header = () => {
             <summary className="cursor-pointer">Visualizations</summary>
             <div className="mt-2 flex flex-col gap-2 rounded-md border border-violet-200 bg-white p-3 md:absolute md:z-20 md:mt-2 md:min-w-44 md:shadow">
               <Link href="/visuals/map" onClick={() => setOpen(false)}>Map</Link>
+              <Link href="/visuals/population" onClick={() => setOpen(false)}>Population</Link>
               <Link href="/visuals/histogram" onClick={() => setOpen(false)}>Histogram</Link>
               <Link href="/comparison" onClick={() => setOpen(false)}>Comparison</Link>
             </div>

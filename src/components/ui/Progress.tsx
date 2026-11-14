@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
 import {Root, Indicator} from "@radix-ui/react-progress";
+import { YES_STRONG } from "@/lib/colors";
 
 type Props = {
     value: number
@@ -27,8 +28,8 @@ function ProgressDemo (props: Props) {
 		>
 			<Indicator
 				id = 'yesvotes'
-				className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full bg-[#8856a7] transition-transform duration-[660ms]"
-				style={{ transform: `translateX(-${100 - (props.value/props.max * 100)}%)`}}
+				className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full transition-transform duration-[660ms]"
+				style={{ transform: `translateX(-${100 - (props.value/props.max * 100)}%)`, background: YES_STRONG }}
 			/>
 		</Root>
 	);

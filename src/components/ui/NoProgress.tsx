@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
 import {Root, Indicator} from "@radix-ui/react-progress";
+import { NO_STRONG } from "@/lib/colors";
 
 type Props = {
     value: number
@@ -26,8 +27,8 @@ function NoProgress (props: Props) {
 			value={progress}
 		>
 			<Indicator
-				className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full bg-[#b3cde3] transition-transform duration-[660ms]"
-				style={{ transform: `translateX(-${100 - (props.value/props.max * 100)}%)`, background: 'linear-gradient(to right, #edf8fb, #b3cde3, #8c96c6)'}}
+				className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full transition-transform duration-[660ms]"
+				style={{ transform: `translateX(-${100 - (props.value/props.max * 100)}%)`, background: NO_STRONG }}
 			/>
 		</Root>
 	);

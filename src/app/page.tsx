@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HistImage } from '@/components/home/HistImage';
 import { MapImage } from '@/components/home/MapImage';
+import { PopulationImage } from '@/components/home/PopulationImage';
 import { PropImage } from '@/components/home/PropImage';
 import Link from 'next/link';
 
@@ -39,8 +40,9 @@ export default function HomePage() {
             <p>These visualizations can be exported in their entirety and used in local election reporting. All the data for these visualizations comes from the Colorado Secretary of State’s elections data. Find out more about how this data was sourced<Link href="/about" className="text-blue-700 hover:underline"> here</Link>.</p>
           </div>
           <h2 className="mt-10 font-serif text-2xl">Explore different visualizations</h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             <MapImage/>
+            <PopulationImage/>
             <PropImage/>
             <HistImage/>
           </div>

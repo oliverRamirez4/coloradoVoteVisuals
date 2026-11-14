@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useContext } from 'react';
 import * as d3 from 'd3-v4';
 import { VoteData } from '@/types/propdata';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
+import { NO_STRONG, YES_STRONG } from '@/lib/colors';
 
 type MapProps = {
   propositionId?: number;
@@ -179,8 +180,8 @@ const yAxisLabel = svg
 
       const color = d3
       .scaleOrdinal()
-      .domain(['yesVotes', 'noVotes'])
-      .range(['#810f7c', '#b3cde3',]);
+      .domain(['yes_count', 'no_count'])
+      .range([YES_STRONG, NO_STRONG]);
 
 
         // Set zoom and pan features
