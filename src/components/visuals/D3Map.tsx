@@ -248,15 +248,13 @@ export function ColoradoMap({ propositionId, year, voteData = [], variant = 'cou
         if (!point) return;
         const [x, y] = point;
 
-        if (!population) {
-          cities.append('circle')
-            .attr('cx', x)
-            .attr('cy', y)
-            .attr('r', 3.5)
-            .attr('fill', '#111')
-            .attr('stroke', '#fff')
-            .attr('stroke-width', 1.5);
-        }
+        cities.append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 3.5)
+          .attr('fill', '#111')
+          .attr('stroke', '#fff')
+          .attr('stroke-width', 1.5);
 
         if (city.primary || showEveryLabel) {
           cities.append('text')
