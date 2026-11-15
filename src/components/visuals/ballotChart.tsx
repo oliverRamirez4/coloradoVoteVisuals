@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { Proposition } from '@/types/propdata';
 import { withBase } from '@/lib/paths';
@@ -24,6 +24,7 @@ export function BallotChart() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const selected = useContext(SelectedPropContext);
   const router = useRouter();
+  const embed = useSearchParams().get('embed') === 'true';
   const year = selected?.year;
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export function BallotChart() {
             <g
               key={row.id}
               className="cursor-pointer"
-              onClick={() => router.push(`/visuals/map?proposition_id=${row.id}`)}
+              onClick={() => router.push(`/visuals/map?proposition_id=${row.id}${embed ? '&embed=true' : ''}`)}
             >
               <title>{`${row.name}: ${row.share.toFixed(1)}% yes. Open the county map.`}</title>
               <text

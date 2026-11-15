@@ -1,57 +1,76 @@
 'use client';
-import React, { useState, useEffect, createContext} from 'react';
-import { usePathname } from 'next/navigation';
+import React, { Suspense, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PropositionFilters } from '@/components/filtering/PropositionFilters';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Proposition, VoteData } from '@/types/propdata';
+import { Proposition } from '@/types/propdata';
 import VisualizationSelect from '@/components/vizSelect/VisualizationSelect';
 import { ExportModal } from '@/components/export/ExportModal';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { ComparePropContext } from '@/context/ComparePropContext';
 import { visualizationById } from '@/lib/visualizations';
+import { fetchProposition } from '@/lib/propositions';
 
-
-
-export default function visualLayoutRootLayout({
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>) {
+function ComparisonLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [selectedProp1, setSelectedProp1] = useState<Proposition | null>(null);
   const [selectedProp2, setSelectedProp2] = useState<Proposition | null>(null);
- 
-
-
+  const searchParams = useSearchParams();
+  const isEmbed = searchParams.get('embed') === 'true';
+  const proposition1Id = searchParams.get('proposition1_id');
+  const proposition2Id = searchParams.get('proposition2_id');
 
   useEffect(() => {
-    if (selectedProp1 && selectedProp2){
-      const slug = `?proposition1_id=${selectedProp1.id}&proposition2_id=${selectedProp2.id}`;
-      const newUrl = `${slug}`;
-      //const newUrl = `/visuals/${slug}`;
-      window.history.pushState({}, '', newUrl); 
-      console.log("selectedProp1 or 2  has changed to", selectedProp1, " and ", selectedProp2)
-
+    let cancelled = false;
+    if (proposition1Id) {
+      fetchProposition(proposition1Id).then((prop) => {
+        if (!cancelled && prop) setSelectedProp1(prop);
+      });
     }
-    else if (selectedProp1) {
-      const slug = `?proposition1_id=${selectedProp1.id}`;
-      const newUrl = `${slug}`;
-      window.history.pushState({}, '', newUrl); 
-      console.log("selectedProp1 has changed to", selectedProp1)
+    if (proposition2Id) {
+      fetchProposition(proposition2Id).then((prop) => {
+        if (!cancelled && prop) setSelectedProp2(prop);
+      });
     }
-    else if (selectedProp2) {
-      const slug = `?proposition2_id=${selectedProp2.id}`;
-      const newUrl = `${slug}`;
-      window.history.pushState({}, '', newUrl); 
-      console.log("selectedProp2 has changed to", selectedProp2)
-    }
-  }, [selectedProp1, selectedProp2]);
+    return () => {
+      cancelled = true;
+    };
+  }, [proposition1Id, proposition2Id]);
 
+  useEffect(() => {
+    if (!selectedProp1 && !selectedProp2) return;
+    const params = new URLSearchParams(window.location.search);
+    if (selectedProp1) params.set('proposition1_id', String(selectedProp1.id));
+    if (selectedProp2) params.set('proposition2_id', String(selectedProp2.id));
+    if (isEmbed) params.set('embed', 'true');
+    const next = `?${params.toString()}`;
+    if (next !== window.location.search) window.history.pushState({}, '', next);
+  }, [selectedProp1, selectedProp2, isEmbed]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const chart = (
+    <SelectedPropContext.Provider value={selectedProp1}>
+      <ComparePropContext.Provider value={selectedProp2}>
+        {children}
+      </ComparePropContext.Provider>
+    </SelectedPropContext.Provider>
+  );
 
-const [isModalOpen, setIsModalOpen] = useState(false);
+  if (isEmbed) {
+    return (
+      <div className="min-h-screen bg-white text-gray-900">
+        <div id="export-container" className="w-full p-3">
+          <div className="h-[34rem]">{chart}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -64,13 +83,9 @@ const [isModalOpen, setIsModalOpen] = useState(false);
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="min-w-0 md:col-span-3">
             <Card className="flex min-h-[28rem] flex-col justify-center overflow-x-auto">
-              <div className="justify-center flex mx-14 my-4 text-lg font-serif">
+              <div id="export-container" className="h-[32rem]">
+              {chart}
               </div>
-              <SelectedPropContext.Provider value={selectedProp1}>
-              <ComparePropContext.Provider value={selectedProp2}>
-              {children}
-              </ComparePropContext.Provider>
-              </SelectedPropContext.Provider>
               
   
             </Card>
@@ -95,7 +110,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
             <Card>
               <div className="space-y-2">
               <Button variant="primary" className="w-full" onClick={() => setIsModalOpen(true)}>
-                Export Map
+                Export
               </Button>
               </div>
             </Card>
@@ -109,4 +124,16 @@ const [isModalOpen, setIsModalOpen] = useState(false);
       />
     </div>
   );
-  }
+}
+
+export default function visualLayoutRootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <Suspense fallback={null}>
+      <ComparisonLayout>{children}</ComparisonLayout>
+    </Suspense>
+  );
+}

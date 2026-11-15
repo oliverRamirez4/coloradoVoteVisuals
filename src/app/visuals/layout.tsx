@@ -13,6 +13,7 @@ import { ExportModal } from '@/components/export/ExportModal';
 import { SelectedPropContext } from '@/context/SelectedPropContext';
 import { useSearchParams } from 'next/navigation';
 import { visualizationByPath } from '@/lib/visualizations';
+import { fetchProposition } from '@/lib/propositions';
 
 function VisualLayout({
   children,
@@ -53,7 +54,16 @@ function VisualLayout({
   const isEmbed = searchParams.get('embed') === 'true';
   const propositionId = searchParams.get('proposition_id');
 
-
+  useEffect(() => {
+    if (!propositionId) return;
+    let cancelled = false;
+    fetchProposition(propositionId).then((prop) => {
+      if (!cancelled && prop) setSelectedProp(prop);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [propositionId]);
 
   useEffect(() => {
     // update URL and voteData when the proposition is selected from dropdown
@@ -69,10 +79,12 @@ function VisualLayout({
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {isEmbed ? (
-        <div id="export-container" className="w-full h-full">
-          <SelectedPropContext.Provider value={selectedProp}>
-            {children}
-          </SelectedPropContext.Provider>
+        <div id="export-container" className="w-full p-3">
+          <div className={view?.id === 'histogram' ? 'h-[34rem]' : undefined}>
+            <SelectedPropContext.Provider value={selectedProp}>
+              {children}
+            </SelectedPropContext.Provider>
+          </div>
         </div>
       ) : (
         <>
@@ -108,7 +120,7 @@ function VisualLayout({
                 <Card>
                   <div className="space-y-2">
                     <Button variant="primary" className="w-full" onClick={() => setIsModalOpen(true)}>
-                      Export Map
+                      Export
                     </Button>
                   </div>
                 </Card>

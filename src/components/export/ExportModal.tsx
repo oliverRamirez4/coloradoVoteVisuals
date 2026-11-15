@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Proposition } from '@/types/propdata';
+import { visualizationByPath } from '@/lib/visualizations';
 
 interface ExportModalProps {
   isOpen: boolean;
@@ -15,14 +16,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, selec
   useEffect(() => {
     if (isOpen && selectedProp) {
       // generate dynamic embed URL using the current route
-      const embedURL = `${window.location.origin}${window.location.pathname}?embed=true&proposition_id=${selectedProp.id}`;
-      const iframeCode = `<iframe src="${embedURL}" width="100%" height="600" style="border: none;"></iframe>`;
+      const params = new URLSearchParams(window.location.search);
+      params.set('embed', 'true');
+      if (!window.location.pathname.includes('/comparison')) {
+        params.set('proposition_id', String(selectedProp.id));
+      }
+      const view = visualizationByPath(window.location.pathname);
+      const embedURL = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+      const iframeCode = `<iframe src="${embedURL}" width="100%" height="${view?.embedHeight ?? 720}" style="border: none;"></iframe>`;
       setEmbedCode(iframeCode);
     }
   }, [isOpen, selectedProp]);
 
   const handleDownloadSVG = () => {
-    const svgElement = document.querySelector('svg#map-svg') || document.querySelector('svg#histogram-svg');
+    const svgElement = document.querySelector('#export-container svg');
     if (!svgElement) {
       console.error('SVG element not found!');
       return;

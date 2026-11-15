@@ -27,14 +27,21 @@ export function ComparisonVisual({prop1VoteData, prop2VoteData}: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<d3.Selection<HTMLDivElement, unknown, HTMLElement, any>>();
-  const [chartWidth, setChartWidth] = useState(800);
+  const [chartSize, setChartSize] = useState({ width: 800, height: 480 });
 
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
     const measure = () => {
-      const next = Math.floor(node.clientWidth);
-      setChartWidth((current) => (current === next || next < 1 ? current : next));
+      const next = {
+        width: Math.floor(node.clientWidth),
+        height: Math.floor(node.clientHeight),
+      };
+      setChartSize((current) => (
+        next.width < 1 || next.height < 1 || (current.width === next.width && current.height === next.height)
+          ? current
+          : next
+      ));
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -73,46 +80,54 @@ export function ComparisonVisual({prop1VoteData, prop2VoteData}: MapProps) {
   
       tooltipRef.current = tooltip;
 
+    const label1 = shortMeasureName(propositionName1);
+    const label2 = shortMeasureName(propositionName2);
+    const legend = [
+      label1 ? { label: label1, color: '#998ec3' } : null,
+      label2 ? { label: label2, color: '#f1a340' } : null,
+    ].filter(Boolean);
+    const legendHeight = Math.max(legend.length, 1) * 20;
+
     // Set the dimensions and margins of the graph
-    const margin = { top: 10, right: 16, bottom: 50, left: 56 },
-      width = Math.max(220, (chartWidth || 800) - margin.left - margin.right),
-      height = Math.max(240, Math.min(420, Math.round((chartWidth || 800) * 0.5)));
+    const margin = { top: legendHeight + 16, right: 16, bottom: 78, left: 72 },
+      width = Math.max(220, (chartSize.width || 800) - margin.left - margin.right),
+      height = Math.max(180, (chartSize.height || 480) - margin.top - margin.bottom);
 
-
-
-    // Set up SVG container
-    const svg = d3
+    const root = d3
       .select(svgRef.current)
       .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('height', height + margin.top + margin.bottom);
+
+    const legendGroup = root.append('g').attr('transform', 'translate(' + margin.left + ',12)');
+    if (legend.length === 0) {
+      legendGroup.append('text')
+        .attr('y', 14)
+        .attr('font-size', 14)
+        .attr('fill', '#333')
+        .text('Select two measures');
+    }
+    legend.forEach((item, index) => {
+      const y = index * 20;
+      legendGroup.append('rect')
+        .attr('x', 0)
+        .attr('y', y)
+        .attr('width', 12)
+        .attr('height', 12)
+        .attr('rx', 2)
+        .attr('fill', item.color)
+        .attr('stroke', '#333');
+      legendGroup.append('text')
+        .attr('x', 18)
+        .attr('y', y + 11)
+        .attr('font-size', 13)
+        .attr('font-weight', '600')
+        .attr('fill', '#333')
+        .text(fitText(item.label, width - 18, 13));
+    });
+
+    const svg = root
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-      const titleHeight = 50; // Space for title
-      const titleText = (propositionName1 && propositionName2) 
-  ? propositionName1 + ' vs ' + propositionName2 
-  : 'select 2 propositions';
-
-// Append the main text to the SVG
-const textElement = svg.append('text')
-  .attr('x', width / 2)
-  .attr('y', titleHeight / 2)
-  .attr('text-anchor', 'middle')
-  .attr('font-size', 18)
-  .attr('font-weight', 'bold')
-  .attr('fill', '#333');
-
-// Append the first line (propositionName1 + ' vs')
-textElement.append('tspan')
-  .attr('x', width / 2)
-  .attr('dy', 0) 
-  .text(propositionName1 + ' vs');
-
-// Append the second line (propositionName2 or 'select 2 propositions')
-textElement.append('tspan')
-  .attr('x', width / 2)
-  .attr('dy', '1.2em') 
-  .text(propositionName2);
 
       
 
@@ -163,28 +178,30 @@ textElement.append('tspan')
   .append('text')
   .attr('class', 'x-axis-label')
   .attr('x', width / 2)
-  .attr('y', height + 35)
+      .attr('y', height + 18)
   .attr('text-anchor', 'middle')
-  .style('font-size', '24px')
-  .style('font-weight', 'bold')
+  .style('font-size', '13px')
+  .style('font-weight', '600')
   .text('Counties');
 
   // Append X-axis
-  var xAxis = scatter
+  svg
     .append('g')
     .attr('class', 'x-axis')
     .attr('transform', 'translate(0,' + height + ')')
     .call(d3.axisBottom(x).tickSizeOuter(0))
     .call(d3.axisBottom(x).tickSizeInner(6))
     .selectAll('text')
+    .attr('dx', '-0.4em')
+    .attr('dy', '0.2em')
     .attr('transform', 'rotate(-45)')
     .style('text-anchor', 'end')
-    .style('font-size', '12px') // Increase font size
-    .style('font-weight', 'bold') // Make font bold
+    .style('font-size', '11px')
+    .style('font-weight', '600')
     .style('opacity', '0');
 
       // Adjust tick positions
-  scatter
+  svg
   .selectAll('.x-axis .tick')
   .attr('transform', function (d) {
     // Move tick to center of bar
@@ -196,13 +213,13 @@ textElement.append('tspan')
 const yAxisLabel = svg
 .append('text')
 .attr('class', 'y-axis-label')
-.attr('x', -height / 2) // Center vertically
-.attr('y', -margin.left + 20) // Adjust for spacing
+.attr('x', -height / 2)
+.attr('y', -56)
 .attr('transform', 'rotate(-90)')
 .attr('text-anchor', 'middle')
-.style('font-size', '16px')
-.style('font-weight', 'bold')
-.text('Percent Votes In Favor %');
+.style('font-size', '12px')
+.style('font-weight', '600')
+.text('Yes share');
 
     // Append Y-axis
     const yAxis = svg.append('g').call(d3.axisLeft(y));
@@ -371,27 +388,23 @@ const yAxisLabel = svg
     
         //fade into visibility of x axis
       
-        if (t.k > 2.1) {
-          xAxisLabel
-            .transition()
-            .duration(100)
-            .style('opacity', 0);
-          scatter
-            .selectAll('text')
-            .transition()
-            .duration(100)
-            .style('opacity', '1');
-        } else {
-          xAxisLabel
-            .transition()
-            .duration(100)
-            .style('opacity', 1);
-          scatter
-            .selectAll('text')
-            .transition()
-            .duration(100)
-            .style('opacity', '0');
-        }
+        const showNames = t.k > 2.1;
+        xAxisLabel
+          .transition()
+          .duration(100)
+          .style('opacity', showNames ? 0 : 1);
+        svg
+          .selectAll('.x-axis text')
+          .transition()
+          .duration(100)
+          .style('opacity', (county) => {
+            if (!showNames) return 0;
+            const index = counties.indexOf(county);
+            const xPos = newX(index);
+            const step = Math.abs(newX(index + 1) - xPos);
+            if (xPos < 12 || xPos > width - 8 || step < 28) return 0;
+            return 1;
+          });
     
         // Update the Y scale domain dynamically to fit visible bars
         var newY = y.copy().domain([0, visibleMax || 1]);
@@ -467,11 +480,22 @@ const yAxisLabel = svg
           tooltipRef.current.remove();
         }
       };
-  }, [prop1VoteData, prop2VoteData, chartWidth, propositionName1, propositionName2]);
+  }, [prop1VoteData, prop2VoteData, chartSize, propositionName1, propositionName2]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
       <svg ref={svgRef} className="w-full h-full" />
     </div>
   );
+}
+
+function shortMeasureName(name) {
+  if (!name) return '';
+  return name.split(' - ')[0].replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+
+function fitText(text, maxWidth, fontSize) {
+  const maxChars = Math.max(4, Math.floor(maxWidth / (fontSize * 0.56)));
+  if (text.length <= maxChars) return text;
+  return text.slice(0, maxChars - 1) + '…';
 }
